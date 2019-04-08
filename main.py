@@ -1,6 +1,6 @@
 import discord
 import bot
-import commands
+import _commands
 
 from _discord import Discord
 
@@ -11,10 +11,10 @@ client = _discord.get_client()
 
 bot = bot.SchedulerBot()
 
-bot.commands.append(commands.Setup())
+bot.commands.append(_commands.Setup())
 
 if cfg.bot["version"] == "dev":
-    bot.commands.append(commands.StopCommand())
+    bot.commands.append(_commands.StopCommand())
 
 
 @client.event
@@ -36,7 +36,7 @@ async def on_message(message):
     for command in bot.commands:
         if message.content.startswith(command.activation_string):
             vals = message.content.split(" ")
-            if(len(vals) > 1):
+            if len(vals) > 1:
                 if vals[1] == "help":
                     await command.help(message)
                     return
