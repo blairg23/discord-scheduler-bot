@@ -2,10 +2,12 @@
 Doesn't work with Python3.7 out of the box. If you're using Python 3.7, 
 follow this: https://stackoverflow.com/a/53158394/1224827
 '''
+import embeds
 from _discord import Discord
 
 _discord = Discord()
 client = _discord.get_client()
+
 
 class Command:
     activation_string = ""

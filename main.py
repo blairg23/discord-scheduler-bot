@@ -16,6 +16,7 @@ bot.commands.append(commands.Setup())
 if cfg.bot["version"] == "dev":
     bot.commands.append(commands.StopCommand())
 
+
 @client.event
 async def on_ready():
     print("Logged in as")
@@ -27,6 +28,7 @@ async def on_ready():
     # cool status when bot is online
     game = discord.Game(name="DEVELOPMENT" if cfg.bot["version"] == "dev" else "PRODUCTION")
     await client.change_presence(game=game)
+
 
 # on message go through registered commands
 @client.event
