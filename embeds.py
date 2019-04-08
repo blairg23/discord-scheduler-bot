@@ -1,6 +1,7 @@
 import discord
 import datetime
 
+
 def add_embed_footer(embed):
     embed.set_footer(
         text="Scheduler bot by blairg23 | " + datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S"),
@@ -8,19 +9,19 @@ def add_embed_footer(embed):
     )
 
 
-def Info(title, description):
+def info(title, description):
     embed = discord.Embed(title=":information_source: " + title, description=description, color=0x007BFF)
     add_embed_footer(embed)
     return embed
 
 
-def Success(title, description):
+def success(title, description):
     embed = discord.Embed(title=":white_check_mark: " + title, description=description, color=0x28A745)
     add_embed_footer(embed)
     return embed
 
 
-def Error(title, description):
+def error(title, description):
     embed = discord.Embed(title=":x: " + title, description=description, color=0xDC3545)
     add_embed_footer(embed)
     return embed
