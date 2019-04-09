@@ -1,49 +1,42 @@
 import discord
-import bot
-import _commands
+import bots
+from discord.ext import commands
 
-from _discord import Discord
+import config
 
-import config as cfg
-
-_discord = Discord()
-client = _discord.get_client()
-
-bot = bot.SchedulerBot()
-
-bot.commands.append(_commands.Setup())
-
-if cfg.bot["version"] == "dev":
-    bot.commands.append(_commands.StopCommand())
+client = discord.Client()
+bot = commands.Bot(command_prefix='!')
+scheduler_bot = bots.SchedulerBot()
 
 
-@client.event
+@bot.event
 async def on_ready():
     print("Logged in as")
-    print(client.user.name)
-    print(client.user.id)
+    print(bot.user.name)
+    print(bot.user.id)
     print("------")
     # client.loop.create_task(periodicReminders())
     # client.loop.create_task(periodicTeamUPSync())
     # cool status when bot is online
-    game = discord.Game(name="DEVELOPMENT" if cfg.bot["version"] == "dev" else "PRODUCTION")
-    await client.change_presence(game=game)
+    game = discord.Game(name="DEVELOPMENT" if config.bot["version"] == "dev" else "PRODUCTION")
+    await bot.change_presence(activity=game)
 
 
-# on message go through registered commands
-@client.event
-async def on_message(message):
-    for command in bot.commands:
-        if message.content.startswith(command.activation_string):
-            vals = message.content.split(" ")
-            if len(vals) > 1:
-                if vals[1] == "help":
-                    await command.help(message)
-                    return
-
-            await command.action(bot, message)
-            return
+@bot.command()
+async def ping(context):
+    await context.send("pong")
 
 
-print(cfg)
-client.run(cfg.bot["prod_token"] if cfg.bot["version"] == "prod" else cfg.bot["dev_token"])
+@bot.command()
+async def setup(context, *args):
+    await scheduler_bot.setup(context, *args)
+
+
+@bot.command()
+async def stop(context):
+    if config.bot["version"] == "dev":
+        await bot.logout()
+    else:
+        await context.send("Sorry, Dave, you can only shut me off in development mode.")
+
+bot.run(config.bot["prod_token"] if config.bot["version"] == "prod" else config.bot["dev_token"])
