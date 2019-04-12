@@ -6,10 +6,9 @@ NOTE: This is the old way of handling commands. Left in the repo for reference' 
 Took me forever to get this shit working properly from the docs -.-;
 '''
 import embeds
-from _discord import Discord
+import discord
 
-_discord = Discord()
-client = _discord.get_client()
+client = discord.Client()
 
 
 class Command:
@@ -17,14 +16,14 @@ class Command:
     help_string = ""
     example = ""
 
-    async def action(self, bot, message):
+    async def action(self, bot, context, *args):
         raise NotImplementedError
 
     # default help message for every command (!command help)
-    async def help(self, message):
+    async def help(self, context):
         help_embed = embeds.info("Help for command `%s`" % self.activation_string, self.help_string)
         help_embed.add_field(name="Example", value=self.example)
-        await _discord.send_message(message.channel, embed=help_embed)
+        await context.send(content="", embed=help_embed)
 
 
 class Setup(Command):
@@ -32,8 +31,8 @@ class Setup(Command):
     help_string = "Sets up the server for bot to use:\n**Arguments**:\n`!setup [interval] [interval-units] \"[message]\" [member-order-list]`"
     example = "`!setup 6 hours \"Time to pick your loot! You have 6 hours!\" @exampleuser1 @exampleuser2 @exampleuser3`"
 
-    async def action(self, bot, message):
-        await bot.setup(message)
+    async def action(self, bot, context, *args):
+        await bot.setup(context, *args)
 
 
 class StopCommand(Command):
@@ -43,5 +42,5 @@ class StopCommand(Command):
     activation_string = "!stop"
     help_string = "DEVELOPMENT ONLY - stops the bot"
 
-    async def action(self, bot, message):
+    async def action(self, bot, context, *args):
         await client.logout()

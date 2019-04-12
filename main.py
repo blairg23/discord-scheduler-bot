@@ -33,6 +33,11 @@ async def setup(context, *args):
 
 
 @bot.command()
+async def start(context):
+    await scheduler_bot.start(context)
+
+
+@bot.command()
 async def stop(context):
     if config.bot["version"] == "dev":
         await bot.logout()
